@@ -1,8 +1,7 @@
 # Restore full, incremental, and compressed backups
 
-!!! warning
-   
-    Backup needs to be prepared before it can be restored.
+> **Warning:**  
+> Backup needs to be prepared before it can be restored.
 
 The restore backup procedure is the same for full, incremental, and compressed backups.
 
@@ -21,7 +20,7 @@ rsync or cp to restore the files.
    
     The datadir must be empty before restoring the backup. Also, it’s important to note that MySQL server needs to be shut down before restore is performed. You cannot restore to a datadir of a running mysqld instance (except when importing a partial backup).
 
-Example of the rsync command that can be used to restore the backup
+# Example of the rsync command that can be used to restore the backup
 can look like this:
 
 ```{.bash data-prompt="$"}
@@ -35,5 +34,26 @@ As files’ attributes are preserved, in most cases you must change the files’
 ```{.bash data-prompt="$"}
 $ chown -R mysql:mysql /var/lib/mysql
 ```
-
 Data is now restored, and you can start the server.
+
+# Additional Steps for Full Restoration:
+
+If needed, you can perform additional steps for restoring the database from a backup. For example:
+
+```{.bash data-prompt="$"}
+
+$ sudo mv /var/lib/mysql /var/lib/mysql.bak.$(date +%s)
+
+$ sudo cp -r /home/ubuntu/mysql_backups/full /var/lib/mysql
+
+$ sudo chown -R mysql:mysql /var/lib/mysql
+```
+The commands above move the existing MySQL data directory to a backup folder with a timestamp and then copy the full backup data to the MySQL data directory.
+
+# Start the MySQL Server: Once the restoration is complete and the ownership is corrected, you can start the MySQL server.
+
+```{.bash data-prompt="$"}
+$ sudo systemctl start mysql
+```
+Your MySQL server should now be restored from the backup and ready to use.
+
